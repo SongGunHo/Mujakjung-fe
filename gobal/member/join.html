@@ -3,6 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>회원 가입</title>
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+            function searchAddress(){
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        document.getElementById('address').value= data.address;
+                    }
+                }).open();
+            }
+        </script>
     </head>
     <body>
         <h1>회원 가입</h1>
@@ -39,7 +49,8 @@
             </table>
             <table>
                 <tr>
-                    <td><label for="addess">주소</label></td>
+                    <td><label for="address">주소</label></td>
+                    <button type="button" onclick="searchAddress">주소 검색</button>
                 </tr>
             </table>
             <table>

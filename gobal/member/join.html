@@ -248,9 +248,7 @@
         </td>
       </tr>
 
-      <!-- =============================
-           주소 영역 시작
-           ============================= -->
+      <!-- 주소 영역 시작 -->
 
       <!-- 우편번호 + 주소찾기 버튼 -->
       <tr>
@@ -283,9 +281,7 @@
         </td>
       </tr>
 
-      <!-- =============================
-           약관 보기
-           ============================= -->
+      <!-- 약관 보기-->
       <tr>
         <td>약관</td>
         <td>
@@ -300,17 +296,14 @@
         <td>
           <!-- submit 발생 → JS에서 가로챔 -->
           <button type="submit">회원 가입 완료</button>
+          <p id="termsHint">필수 약과 동의 해야 가입 가능 합니다</p>
         </td>
       </tr>
 
     </table>
   </form>
 
-  <!-- =====================================================
-       [2] 회원가입 성공 모달
-       - CSS는 내일 붙일 예정
-       - 지금은 구조만 만들어 둠
-       ===================================================== -->
+  <!-- [2] 회원가입 성공 모달- CSS는 내일 붙일 예정  - 지금은 구조만 만들어 둠 -->
   <div class="modal" id="successModal" aria-hidden="true">
 
     <!-- 배경 클릭 시 닫기 처리용 -->
@@ -341,91 +334,69 @@
     </div>
   </div>
 
-  <!-- =====================================================
-       [3] JS 영역
-       ===================================================== -->
+  <!-- [3] JS 영역-->
   <script>
+  // ===== 주소 찾기 =====
+  const findZip = document.getElementById("findZip");
+  const zip = document.getElementById("zip");
+  const addr1 = document.getElementById("addr1");
+  const addr2 = document.getElementById("addr2");
 
-    /* =====================================================
-       A. 다음 주소 찾기 기능
-       ===================================================== */
+  // (디버그) 요소가 null이면 id가 안 맞는 거
+  console.log("zip/addr1/addr2:", zip, addr1, addr2);
 
-    // 요소 가져오기
-    const findZip = document.getElementById("findZip");
-    const zip = document.getElementById("zip");
-    const addr1 = document.getElementById("addr1");
-    const addr2 = document.getElementById("addr2");
+  findZip.addEventListener("click", () => {
+    new daum.Postcode({
+      oncomplete: function (data) {
+        console.log("postcode data:", data); // ✅ 여기 찍히는지 확인
 
-    // 주소찾기 버튼 클릭
-    findZip.addEventListener("click", () => {
-      new daum.Postcode({
-        oncomplete: function (data) {
-          zip.value = data.zonecode;   // 우편번호 입력
-          addr1.value = data.address;  // 기본주소 입력
-          addr2.value = "";            // 상세주소 초기화
-          addr2.focus();               // 상세주소로 커서 이동
-        }
-      }).open();
-    });
+        zip.value = data.zonecode;
 
-    /* =====================================================
-       B. 성공 모달 제어
-       ===================================================== */
+        // ✅ 도로명 주소 우선, 없으면 일반 주소
+        addr1.value = data.roadAddress || data.address;
 
-    // 폼
-    const form = document.getElementById("joinForm");
-
-    // 모달
-    const successModal = document.getElementById("successModal");
-
-    // 로그인 이동 버튼
-    const goLoginBtn = document.getElementById("goLogin");
-
-    // 모달 열기
-    function openSuccessModal() {
-      successModal.classList.add("modal-is-open");
-      successModal.setAttribute("aria-hidden", "false");
-    }
-
-    // 모달 닫기
-    function closeSuccessModal() {
-      successModal.classList.remove("is-open");
-      successModal.setAttribute("aria-hidden", "true");
-    }
-
-    /* =====================================================
-       C. 회원가입 제출 가로채기
-       ===================================================== */
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();        // 실제 서버 전송 막기
-      openSuccessModal();        // 성공 모달 표시
-    });
-
-    /* =====================================================
-       D. 배경/X 클릭 닫기
-       ===================================================== */
-    successModal.addEventListener("click", (e) => {
-      if (e.target.dataset.close === "true") {
-        closeSuccessModal();
+        addr2.value = "";
+        addr2.focus();
       }
-    });
+    }).open();
+  });
 
-    /* =====================================================
-       E. ESC 키로 모달 닫기
-       ===================================================== */
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && successModal.classList.contains("is-open")) {
-        closeSuccessModal();
-      }
-    });
+  // ===== 모달 =====
+  const form = document.getElementById("joinForm");
+  const successModal = document.getElementById("successModal");
+  const goLoginBtn = document.getElementById("goLogin");
 
-    /* =====================================================
-       F. 확인 버튼 → 로그인 페이지 이동
-       ===================================================== */
-    goLoginBtn.addEventListener("click", () => {
-      location.href = "../member/login.html";
-    });
+  function openSuccessModal() {
+    successModal.classList.add("modal-is-open");
+    successModal.setAttribute("aria-hidden", "false");
+  }
 
+  function closeSuccessModal() {
+    successModal.classList.remove("modal-is-open");
+    successModal.setAttribute("aria-hidden", "true");
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    openSuccessModal();
+  });
+
+  // 배경/X 닫기
+  successModal.addEventListener("click", (e) => {
+    if (e.target.dataset.close === "true") closeSuccessModal();
+  });
+
+  // ESC 닫기
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && successModal.classList.contains("modal-is-open")) {
+      closeSuccessModal();
+    }
+  });
+
+  // 확인 → 로그인 이동
+  goLoginBtn.addEventListener("click", () => {
+    location.href = "../member/login.html";
+  });
   </script>
 </body>
 </html>

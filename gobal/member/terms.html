@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+
+    </head>
+    <body>
+        <h3>약관 동의 </h3>
+        <label>
+            <input type="checkbox" id="agreeAll" >
+            전체 약관의 동의 합니다 
+        </label>
+        <hr>
+        <label>
+            <input type="checkbox" class="agree-item required"> 
+            (필수) 약관 동의 
+        </label><br>
+        <label>
+            <input type="checkbox" class="agree-item required">
+            (필수) 개인 정보 수집 동의 
+        </label><br>
+        <label>
+            <input type="checkbox" class="agree-item">
+            (필수) 마케팅 수신 동의
+        </label>
+
+
+    </body>
+    <script>
+
+// 🔹 약관 HTML(terms.html)을 비동기로 불러오는 함수
+async function loadTerms() {
+  // 서버(또는 같은 폴더)의 terms.html 파일 요청
+  const res = await fetch("./terms.html");
+
+  // 응답을 텍스트(html 문자열)로 변환
+  const html = await res.text();
+
+  // join 페이지의 #termsArea 영역 안에 약관 HTML 삽입
+  document.querySelector("#termsArea").innerHTML = html;
+
+  // ⚠️ 중요!
+  // terms.html이 DOM에 들어온 "이후"에만
+  // 체크박스 이벤트 바인딩을 해야 요소를 찾을 수 있음
+  initTermsAgreement();
+}
+
+// 🔹 약관 동의 체크 로직 초기화 함수
+function initTermsAgreement() {
+  // 전체 동의 체크박스
+  const agreeAll = document.querySelector("#agreeAll");
+
+  // 모든 개별 체크박스 (필수 + 선택)
+  const items = document.querySelectorAll(".agree-item");
+
+  // 필수 체크박스만 따로
+  const requiredItems = document.querySelectorAll(".agree-item.required");
+
+  // 회원가입 버튼
+  const joinBtn = document.querySelector("#joinBtn");
+
+  // 안내 문구 영역
+  const termsHint = document.querySelector("#termsHint");
+
+  // 🔹 가입 버튼 활성/비활성 상태 업데이트 함수
+  function updateJoinButton() {
+    // 모든 필수 체크박스가 체크되었는지 검사
+    const ok = Array.from(requiredItems).every(chk => chk.checked);
+
+    // 하나라도 미체크면 버튼 비활성화
+    joinBtn.disabled = !ok;
+
+    // 안내 문구 변경
+    termsHint.textContent = ok
+      ? "필수 약관 동의 완료 ✅"
+      : "필수 약관에 동의해야 가입 가능합니다.";
+  }
+
+  // 🔹 [1] 전체 동의 클릭 시
+  agreeAll.addEventListener("change", () => {
+    // 모든 개별 체크박스를 전체 동의 상태와 동일하게 맞춤
+    items.forEach(chk => chk.checked = agreeAll.checked);
+
+    // 버튼 상태 갱신
+    updateJoinButton();
+  });
+
+  // 🔹 [2] 개별 체크박스 클릭 시
+  items.forEach(chk => {
+    chk.addEventListener("change", () => {
+      // 모든 항목이 체크되어 있으면 전체 동의도 체크
+      agreeAll.checked = Array.from(items).every(c => c.checked);
+
+      // 버튼 상태 갱신
+      updateJoinButton();
+    });
+  });
+
+  // 🔹 초기 진입 시 버튼 상태 한번 정리
+  updateJoinButton();
+}
+
+// 🔹 페이지 로드시 약관 HTML 먼저 불러오기 실행
+loadTerms();
+    </script>
+</html>

@@ -12,7 +12,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
 import Join from "./pages/Join";
 import Login from "./pages/Login";
-
+import Search from "./pages/Search";
 function App() {
   return (
 
@@ -41,7 +41,7 @@ function App() {
 
         {/* "/login" -> 로그인 페이지 */}
         <Route path="/login" element={<Login />} />
-        <Route path="/seach" element={<search/>}/>
+        <Route path="/search" element={<Search/>}/>
 
       </Routes>
 

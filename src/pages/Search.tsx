@@ -1,7 +1,7 @@
 // react-router-dom 에서 url query 값을 가져오는 쪽 
 import { useSearchParams } from "react-router-dom";
 
-function Seach (){
+function Search (){
 // url의 query parameter 가져 오기
 // 예: /search?keyword=${재주}&type=domstic
 const [params] = useSearchParams();
@@ -21,4 +21,4 @@ return (
     </div>
 );
 }
-export default Seach;
+export default Search;

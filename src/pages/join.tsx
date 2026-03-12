@@ -18,15 +18,23 @@ function Join(){
     // 상세 주소 입력 창 
     const [detailAddress , setDetailAddress] = useState("");
 
+    // 약관 동의 
+    const [agree, setAgree]=useState(false);
+
     // 회원 가입 필수 
     const join = async ()=>{
+        // 약관 동의 
+        if(!agree){
+            alert("약관의 동의 해야 회원가입이 가능 합니다")
+            return;
+        }
         const response = await fetch("http://localhost:8080/api/member/join",{
             // http 요청 방식 (post: 데이터 생성)
             method: "POST",
             // 서버에 json 데이터라고 알려주는 해더 
             headers: {
                 "Content-Type": "application/json",
-            
+
             },
             // 입력값 json 형식으로 변환하여 서버로 잔송 
             body:JSON.stringify({
@@ -65,6 +73,10 @@ function Join(){
             <input value={address} onChange={(e)=> setAddress(e.target.value)} placeholder="기본 주소 " /><br/><br/>
             {/**상세 주소*/}
             <input value={detailAddress} onChange={(e=>setDetailAddress(e.target.value))} placeholder="상세 주소" /><br/><br/>
+            {/**약관 동의*/}
+            <table>
+                <input type="checkbox" checked={agree} onChange={(e)=> setAgree(e.target.checked)}/>
+            </table>
             {/**회원 가입 버튼*/}
             <button onClick={join}>회원 가입 </button>
 

@@ -8,9 +8,13 @@ function Join(){
     // 비밀 번호 입력 값 
     const [password, setPassword] = useState ("");
     // 2차 비밀 번호 입력 값 
-    const [ConfirmPassword, setConfirmPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     // 이름 입력 값 
     const [name, setName] = useState("");
+    // 전화 번호 
+    const [phone, setPhoen] = useState("");
+    // 성별 
+    const [gender, setGender] = useState("")
     // 우편 번호 입력 값  
     const [zipcode, setZipcode] = useState("");
     // 주소 입력 값 
@@ -27,6 +31,11 @@ function Join(){
         if(!agree){
             alert("약관의 동의 해야 회원가입이 가능 합니다")
             return;
+        }
+        if(password !== confirmPassword){
+            alert("비밀 번호 가 맞지 않습니다")
+            return;
+
         }
         const response = await fetch("http://localhost:8080/api/member/join",{
             // http 요청 방식 (post: 데이터 생성)
@@ -64,7 +73,7 @@ function Join(){
             {/**비밀 번호 */}
             <input type="password" value={password} onChange={(e)=> setPassword(e.target.value)} placeholder="비밀 번호"/><br/><br/>
             {/**2차비밀 번호 */}
-            <input type="password" value={ConfirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} placeholder="비밀 번호"/><br/><br/>
+            <input type="password" value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} placeholder="비밀 번호"/><br/><br/>
               {/**이름 입력 값  */}
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="이름" /> <br/><br/>
             {/**우편 번호 */}
@@ -74,9 +83,9 @@ function Join(){
             {/**상세 주소*/}
             <input value={detailAddress} onChange={(e=>setDetailAddress(e.target.value))} placeholder="상세 주소" /><br/><br/>
             {/**약관 동의*/}
-            <table>
+            <label>
                 <input type="checkbox" checked={agree} onChange={(e)=> setAgree(e.target.checked)}/>
-            </table>
+            </label>
             {/**회원 가입 버튼*/}
             <button onClick={join}>회원 가입 </button>
 

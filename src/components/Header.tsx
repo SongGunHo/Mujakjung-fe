@@ -48,6 +48,7 @@ function Header() {
 
       {/* 여행 타입 */}
       <select value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="">모두</option>
         <option value="domestic">국내 여행</option>
         <option value="overseas">해외 여행</option>
       </select>

@@ -9,10 +9,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Main : 메인 페이지
 // Join : 회원가입 페이지
 // Login : 로그인 페이지
-import Main from "./pages/Main";
-import Join from "./pages/Join";
-import Login from "./pages/Login";
-import Search from "./pages/Search";
+import Main from "./pages/travel/Main";
+import Join from "./pages/member/Join";
+import Login from "./pages/member/Login";
+import Search from "./pages/travel/Search";
 function App() {
   return (
 

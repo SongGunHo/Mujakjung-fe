@@ -1,6 +1,6 @@
 // Header / Footer import
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 // Main 페이지
 function Main() {

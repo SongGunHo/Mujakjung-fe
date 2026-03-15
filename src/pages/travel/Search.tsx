@@ -1,5 +1,6 @@
 // React Router에서 URL query 값을 가져오기
 import { useSearchParams } from "react-router-dom";
+import TravelCard from "../../components/TravelCard";
 
 function Search() {
 
@@ -53,10 +54,14 @@ function Search() {
       {/* 검색 결과가 있으면 리스트 출력 */}
         {filteredPlaces.length > 0 ? (
             filteredPlaces.map((place)=> (
-            <div key={place.id}>
-                <h3>{place.name}</h3>
-                <p>{place.desc}</p>
-            </div>
+              <TravelCard key={place.id} travel={{
+                id: place.id,
+                title: place.name,
+                image: "/test.jpg", 
+                price: "가격 미정",
+                location: place.name
+              }}
+              />
         ))
     ):(
         <p>조건에 맞는 여행지가 없습니다</p>

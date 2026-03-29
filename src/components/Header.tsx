@@ -60,6 +60,7 @@ function Header() {
       {token ? (
         <>
           {/* 로그인 상태 */}
+          <button onClick={()=> navigate("mypage")}>마이페이지</button>
           <button onClick={logout}>로그아웃</button>
         </>
       ) : (
@@ -67,6 +68,7 @@ function Header() {
           {/* 로그아웃 상태 */}
           <button onClick={() => navigate("/join")}>회원 가입</button>
           <button onClick={() => navigate("/login")}>로그인</button>
+
         </>
       )}
     </header>

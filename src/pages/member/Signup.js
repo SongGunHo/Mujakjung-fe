@@ -3,23 +3,21 @@ import DaumPostcode from "react-daum-postcode";
 
 
 const Sipnup= ()=> {
-    // 기존 회원 가입 정보 (아이디, 비번)
-    const [email, setEmail] = useState('');
-    const [password, setPassword ] = useState ('');
-    // 주소 관련 상태 (아까 만들 거 )
-    const [zipcode, setZipcode] = useState('');
-    const [address, setAddress] = useState('');
-    const [detailAddress, setDetailAddress] = useState('');
-    const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
-    // 주소 선택 완료 핸들러 
-    const handleComplete = (data) =>{
-        setZipcode(data.zonecode);
-        setAddress(data.address);
-        setIsPostcodeOpen(data.isPostcodeOpen);
-    };
+    const REST_API_KEY= 'c20fa1e751278dc7d481f42f175401b2';
+    const REST_API_URL= 'http://localhost:8080/auth/kakao/callback';
+    const KAKAO_AUTH_URL ='https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`';
+    // 버튼 클릭 함수 
+    const handleKakaoLogin =() =>{
+        // 카카오 인증 페이지 로 이동 
+        window.location.href=KAKAO_AUTH_URL;
+    }
     return (
-        <div className="signup-container">
-            h2``
+        <div>
+            <button type="button" onClick={handleKakaoLogin}>
+                <img src="{kakaoBtn}" alt="카카오 로그인 ">
+
+                </img>
+            </button>
         </div>
     )
 }

@@ -35,6 +35,12 @@ function Login() {
       alert("서버 연결 실패");
     }
   };
+  const REST_API_KEY = "c20fa1e751278dc7d481f42f175401b2";
+  const REDIRECT_URI = "http://localhost:8080/auth/kakao/callback";
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+   const handleKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <div>
@@ -45,7 +51,13 @@ function Login() {
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호"/><br /><br />
 
       <button onClick={login}>로그인</button>
+      <div>
+        <button type="button" onClick={handleKakaoLogin}>
+          <img src="{kakaoBtn}" alt="카카오 로그인" />
+        </button>
+      </div>
     </div>
+    
   );
 }
 

@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# 🎨 Mujakjung-fe (무작정 프론트엔드)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **React와 TypeScript를 활용한 무작정 프로젝트의 프론트엔드**
+> 사용자 친화적인 UI와 효율적인 상태 관리를 통해 최상의 사용자 경험을 제공합니다.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack
 
-## React Compiler
+| 분류 | 기술 스택 |
+| :--- | :--- |
+| **Library** | React 18+ |
+| **Language** | TypeScript |
+| **Build Tool** | Vite |
+| **State Management** | Axios / React Query (추천) |
+| **Styling** | CSS Modules / Styled-components |
+| **Icon** | Lucide React / FontAwesome |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📦 주요 기능
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **로그인 및 인증**
+  - [x] 카카오 소셜 로그인 연동 (Redirect URI 처리)
+  - [ ] JWT 토큰 저장 및 관리 (LocalStorage/Cookie)
+- **회원 기능**
+  - [x] 회원가입 폼 유효성 검사 (Validation)
+  - [ ] 마이페이지 정보 조회 및 수정
+- **UI/UX**
+  - [x] 반응형 레이아웃 구성
+  - [ ] 공통 컴포넌트(Button, Input, Modal) 모듈화
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ⚙️ 시작하기
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1️⃣ 패키지 설치
+프로젝트 루트 폴더에서 아래 명령어를 실행하여 필요한 라이브러리를 설치합니다.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+```bash
+npm install
+# 또는
+yarn install
+2️⃣ 환경 변수 설정 (.env)
+루트 디렉토리에 .env 파일을 생성하고 카카오 앱 키를 설정하세요.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+코드 스니펫
+VITE_KAKAO_REST_API_KEY=c20fa1e751278dc7d481f42f175401b2
+VITE_KAKAO_REDIRECT_URI=http://localhost:8080/auth/kakao/callback
+3️⃣ 개발 서버 실행
+Bash
+npm run dev
+기본 접속 주소: http://localhost:5173
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+🗂️ 프로젝트 구조
+Plaintext
+src
+ ├─ assets          # 이미지, 폰트 등 정적 파일
+ ├─ components      # 재사용 가능한 공통 컴포넌트
+ ├─ hooks           # 커스텀 훅 (API 호출 등)
+ ├─ pages           # 페이지 단위 컴포넌트 (Login, Home 등)
+ ├─ services        # API 통신 로직 (Axios 인스턴스 등)
+ ├─ types           # TypeScript 타입 정의
+ └─ App.tsx         # 메인 라우팅 설정

@@ -3,12 +3,14 @@ import { useEffect } from "react";
 function Footer() {
 
   const openSearch = () => {
-    const { daum, kakao } = window as any;
-    //팝업을 열기 전에 카카오가 있는지 먼저 확인!
-    if(!daum || !kakao || !kakao.maps || !kakao.maps.services){
-      alert("카카오 지도 불러 오는 중 입니다 , 잠시만 기달려 주세요")
-      return ;
-    }
+    const kakao = (window as  any).kakao;
+    const daum = (window as any).daum;
+    console.log("카카오 체크: ", kakao); 
+       //팝업을 열기 전에 카카오가 있는지 먼저 확인!
+    // if(!daum || !kakao || !kakao.maps || !kakao.maps.services){
+    //   alert("카카오 지도 불러 오는 중 입니다 , 잠시만 기달려 주세요")
+    //   return ;
+    // }
 
     new daum.Postcode({
       // 카카오 로딩 되는지 먼저 확인

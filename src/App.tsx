@@ -8,7 +8,7 @@ import AdminMain from "./pages/admin/AdminMain";
 import Mypage from "./pages/member/MyPage";
 
 // 1. Footer 임포트 추가! (경로가 src/components/Footer.tsx 라면)
-import Footer from "./components/Footer"; 
+import Footer from "./components/Footer";
 
 function App() {
   return (

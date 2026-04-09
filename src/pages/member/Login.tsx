@@ -55,6 +55,9 @@ function Login() {
         <button type="button" onClick={handleKakaoLogin}>
           <img src="{kakaoBtn}" alt="카카오 로그인" />
         </button>
+        <button onClick={()=> navigate("/join")}>
+          회원 가입 
+        </button>
       </div>
     </div>
     

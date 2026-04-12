@@ -57,7 +57,7 @@ function Join() {
 
         // 텍스트 데이터(JSON)를 객체로 묶어 Blob으로 변환 후 추가
         const memberData = {
-            email, password, name, phone, gender, zipcode, address, detailAddress
+            email, password, name, phone, gender, zipcode, address, detailAddress, role: "USER"
         };
         formData.append("memberData", new Blob([JSON.stringify(memberData)], { type: "application/json" }));
 

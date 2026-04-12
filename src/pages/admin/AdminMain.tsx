@@ -43,6 +43,7 @@ function AdminMain() {
   const [content, setContent] = useState("");          // 상세 페이지 본문
   const [imageFile, setImageFile] = useState<File | null>(null); // 실제 파일 객체
   const [previewUrl, setPreviewUrl] = useState<string>("");      // 미리보기용 주소
+  const [price , setPrice] = useState<number>(0);
 
   // 3. 사진 파일 선택 시 실행되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +62,8 @@ function AdminMain() {
       category,
       title,
       location,
-      content,
+      content,  
+      price,
       imageName: imageFile ? imageFile.name : "없음",
       regDate: new Date().toLocaleDateString() // 오늘 날짜 기록
     };
@@ -132,6 +134,8 @@ function AdminMain() {
           onChange={handleImageChange} 
           style={styles.input} 
         />
+        <label style={styles.label}></label>
+        <input type="number" placeholder="가격을 입력을 하세요(예 : 50000)" value={price} onChange={(e) => setPrice(Number(e.target.value))} style={styles.input}/>
         
         {/* 미리보기가 있을 때만 이미지 표시 */}
         {previewUrl && (

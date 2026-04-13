@@ -2,65 +2,35 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// 1. 스타일 정의: TypeScript에서 문자열 리터럴 에러 방지를 위해 'as const' 사용
-const styles = {
-  container: { 
-    padding: '40px', 
-    maxWidth: '800px', 
-    margin: '0 auto', 
-    textAlign: 'left' as const 
-  },
-  header: { color: '#333' },
-  formGroup: { 
-    display: 'flex', 
-    flexDirection: 'column' as const, 
-    marginTop: '20px' 
-  },
-  label: { 
-    fontWeight: 'bold' as const, 
-    marginBottom: '8px', 
-    marginTop: '15px' 
-  },
-  select: { padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ddd' },
-  input: { padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ddd' },
-  textarea: { padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ddd', minHeight: '150px' },
-  button: { 
-    marginTop: '25px', 
-    padding: '15px', 
-    backgroundColor: '#4CAF50', 
-    color: 'white', 
-    border: 'none', 
-    borderRadius: '5px', 
-    fontSize: '18px', 
-    cursor: 'pointer', 
-    fontWeight: 'bold' as const 
-  }
-};
-
 function AdminMain() {
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const navigate = useNavigate();
+  // 탭 상태 관리 
+  const [activeTab , setActiveTeb] = useState("travel");
 
-  // 2. 입력 데이터 상태 관리 (State)
-  const [category, setCategory] = useState("domestic"); // 국내/해외
-  const [title, setTitle] = useState("");              // 여행지 이름
-  const [location, setLocation] = useState("");        // 주소
-  const [content, setContent] = useState("");          // 상세 설명
-  const [imageFile, setImageFile] = useState<File | null>(null); // 파일 객체
-  const [previewUrl, setPreviewUrl] = useState<string>("");      // 미리보기 URL
-  const [price, setPrice] = useState<number>(0);       // 가격 데이터
+  // 1. 상태 관리 (데이터 입력값)
+  const [category, setCategory] = useState("domestic");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [content, setContent] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
 
-  // 3. 이미지 선택 시 실행: 미리보기 생성 로직
+  // 2. 이미지 미리보기 생성 로직
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file)); // 임시 URL 생성
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  // 4. 등록 버튼 클릭 시 실행: 백엔드 API 연동
+  // 3. [핵심] 여행지 등록 함수
   const handleRegister = () => {
-    // 서버로 전송할 데이터 객체 생성
+    // 로컬 스토리지에서 저장된 토큰 꺼내기
+    const token = localStorage.getItem("token");
+
+    // 서버 전송용 데이터 객체
     const travelData = {
       category,
       title,
@@ -71,25 +41,29 @@ function AdminMain() {
       regDate: new Date().toLocaleDateString() 
     };
 
-    // axios를 이용한 POST 요청
-    axios.post("http://localhost:8080/api/admin/travel/register", travelData)
+    // Axios POST 요청 (주소, 데이터, 설정)
+    axios.post("http://localhost:8080/api/admin/travel/register", travelData, {
+        // [필수] 401 Unauthorized 에러 해결을 위한 인증 헤더 추가
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
       .then((res) => {
-        // 백엔드에서 저장 후 리턴해준 id 값 추출
+        // 서버에서 생성된 ID 받아오기
         const newId = res.data.id;
-
-        console.log("등록 성공! 서버 응답 데이터:", res.data);
-        alert(`${title} 등록이 완료되었습니다! (160번째 커밋 가즈아!)`);
+        console.log("등록 성공!", res.data);
+        alert(`${title} 등록 완료! (160번째 커밋)`);
         
-        // 성공 시 상세 페이지로 즉시 이동 (절대 경로 / 사용)
+        // 상세 페이지로 즉시 이동
         navigate(`/travel/${newId}`);
       })
       .catch((err) => {
-        // 네트워크 에러나 서버 에러 발생 시 처리
-        console.error("등록 실패:", err);
-        alert("서버 연결에 실패했습니다. 백엔드가 켜져 있는지 확인해 보세요.");
+        console.error("등록 실패 로그:", err);
+        // 에러 메시지 처리
+        alert("등록 실패: 권한이 없거나 서버가 응답하지 않습니다.");
       });
 
-    // (선택) 입력창 초기화 - 이동 후에 실행되므로 상황에 따라 조정 가능
+    // 입력 필드 초기화
     setTitle("");
     setLocation("");
     setContent("");
@@ -99,52 +73,52 @@ function AdminMain() {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.header}>🛠 무작정 프로젝트 - 관리자 모드</h2>
-      <p>새로운 여행 코스를 등록하고 상세 페이지를 구성해보세요.</p>
-      <hr />
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "sans-serif" }}>
+       {/* --- 1. 왼쪽 사이드바 (초록색 기둥) --- */}
+       <div style={{width: "250px", backgroundColor: "#4CAF50", color: "white", padding: "20px", flexShrink: 0}}>
+        <h2 style={{fontSize: "1.2rem", marginBottom: "30px"}}>관리자 페이지</h2>
+        <div onClick={() => setActiveTeb("travel")} style={{padding: "15px", cursor: "pointer",borderRadius: "5px", backgroundColor: activeTab === "travel"? "#3e8e41" :"transparent", marginBottom: "10px"}}>
+          여행지 등록
+        </div>
+        <div onClick={()=> setActiveTeb("members")} style={{padding: "15px", cursor: "pointer", borderRadius: "5px", backgroundColor : activeTab === "members"? "#3e8e41" : "transparent", marginBottom: "10px"}}>
+          고객 관리 등록
+        </div>
+       </div>
+        {/* [오른쪽 영역] 콘텐츠 화면 */}
+        <div style={{flex: 1, padding: "40px", background:"#fff"}}>
+          {activeTab === "travel" && (
+            <div>
+              <h2>세로운 여헹 코스 등록</h2>
+              <hr />
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <label>분류 :
+                <select value={category} onChange={(e) => setCategory(e.target.value)}>
+                  <option value="domsetic">국내 여행</option>
+                  <option value="overseas">해외 여행</option>
+                </select>
+              </label>
+              <label>이름: <input type="text" value={title} onChange={(e)=> setTitle(e.target.value)} /></label>
+              <label>위치: <input type="text" value={location} onChange={(e)=> setLocation(e.target.value)} /></label>
+              <label>내용: <textarea value={content} onChange={(e)=> setContent(e.target.value)}></textarea></label>
+              <label>이미지: <input type="file" onChange={handleImageChange}  /></label>
+              <label>가격: <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} /></label>
+              <button onClick={handleRegister} style={{backgroundColor:"#4CAF50", color: "white", padding: "12px", border: "none", borderRadius: "8px", cursor: "poninter", fontWeight: "bold" }}>
+                신규 등록 하기
+              </button>
+              </div>
+            </div>
+          )}
+          {activeTab === "number" && (
+            <div>
+              <h2>고객 계정 관리</h2>
+              <hr />
+              <p>고객 목록 불러 오는 중 ......</p>
+            </div>
+          )}
 
-      <div style={styles.formGroup}>
-        <label style={styles.label}>여행지 분류</label>
-        <select style={styles.select} value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="domestic">국내 여행지 (Domestic)</option>
-          <option value="overseas">해외 여행지 (Overseas)</option>
-        </select>
-
-        <label style={styles.label}>📝 여행지 이름</label>
-        <input type="text" style={styles.input} placeholder="예: 제주도 서귀포 숲길" value={title} onChange={(e) => setTitle(e.target.value)} />
-
-        <label style={styles.label}>🗺️ 위치 (주소 또는 좌표)</label>
-        <input type="text" style={styles.input} placeholder="주소를 입력하세요" value={location} onChange={(e) => setLocation(e.target.value)} />
-
-        <label style={styles.label}>📄 상세 페이지 내용</label>
-        <textarea style={styles.textarea} placeholder="상세 내용을 적어주세요." value={content} onChange={(e) => setContent(e.target.value)} />
-
-        <label style={styles.label}>📸 대표 이미지 업로드</label>
-        <input type="file" accept="image/*" onChange={handleImageChange} style={styles.input} />
-        
-        <label style={styles.label}>💰 가격 설정</label>
-        <input 
-          type="number" 
-          placeholder="가격을 입력하세요 (예: 50000)" 
-          value={price} 
-          onChange={(e) => setPrice(Number(e.target.value))} // 문자열을 숫자로 형변환
-          style={styles.input}
-        />
-        
-        {/* 미리보기 영역 */}
-        {previewUrl && (
-          <div style={{ marginTop: '10px', textAlign: 'center' }}>
-            <img src={previewUrl} alt="미리보기" style={{ width: '100%', maxWidth: '300px', borderRadius: '10px', border: '1px solid #ddd' }} />
-          </div>
-        )}
-
-        <button style={styles.button} onClick={handleRegister}>
-          새 여행지 등록하기
-        </button>
-      </div>
+        </div>
     </div>
-  );
+  )
 }
 
 export default AdminMain;

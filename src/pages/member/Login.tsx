@@ -25,12 +25,14 @@ function Login() {
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.role); // 권한 저장
+      localStorage.setItem("role", data.role); // 권한 저장
       localStorage.setItem("token", data.token); // 로그인 유지
+      localStorage.setItem("userName", data.name || '회원');
       console.log(data);
       alert("로그인 성공");
       // 메인 페이지로 이동 
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error(error);
       alert("서버 연결 실패");
@@ -53,6 +55,7 @@ function Login() {
 
       <button onClick={login}>로그인</button>
       <div>
+
         <button type="button" onClick={handleKakaoLogin}>
           <img src="{kakaoBtn}" alt="카카오 로그인" />
         </button>
